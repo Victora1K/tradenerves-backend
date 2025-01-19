@@ -119,7 +119,7 @@ def detect_green(prices, prices_close, prices_high, prices_open, dates, symbol):
             #print(f"Appending {dates[candle]} and {symbol} ticker to valid greens. ")
             #print(f"Found a green day at date: {dates[candle]}")
     if len(valid_greens) > 0:
-        print(f"Valid green days found: {valid_greens}")
+        #print(f"Valid green days found: {valid_greens}")
         print(len(valid_greens))
     return valid_greens
 

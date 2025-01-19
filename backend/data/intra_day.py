@@ -1,56 +1,83 @@
-import os, requests
-from datetime import datetime, timezone
+import os
+from datetime import datetime, timedelta
+from typing import List, Dict, Optional
+import requests
+#from dotenv import load_dotenv
 
-API_KEY = '4ku7YB5AIpIL_IRvfIiI4xZV09EoLGD6'        #Prod API Key
-#API_KEY = 'gNUdx8Rrob9OtDQSGK9EBX7K179qpNjQ'  
+# Load environment variables
+#load_dotenv()
+API_KEY = os.getenv('POLYGON_API_KEY', '4ku7YB5AIpIL_IRvfIiI4xZV09EoLGD6')
 
+class PolygonAPIError(Exception):
+    """Custom exception for Polygon API errors"""
+    pass
 
-#url = f"https://api.polygon.io/v2/aggs/ticker/SPY/range/5/minute/2023-01-09/2023-02-10?adjusted=true&sort=asc&apiKey={API_KEY}"
-
-
-def get_intra_day(symbol, day):
-    #date/day format is YYYY-MM-DD
-    thirty_one = ['01','03','05','07','08','10','12']
-    thirty = ['04','06','09','11']
-    def calculate_next_day(day):
-        
-        full_date = str(day).split("-")
-        if int(full_date[2]) <= 31:
-            if full_date[2] == '31':
-                if full_date[1] in thirty_one:
-                    next_day = full_date[0] +"-"+ str(int(full_date[1]) + 1) + "-01"
-                    print(f"From 31: {next_day}")
-                    return next_day
-                else:
-                    print("Invalid date: There aren't 31 days in that month. ")
-                
-            elif full_date[2] == '30':
-                if full_date[1] in thirty:
-                    next_day = full_date[0] +"-"+ str(int(full_date[1]) + 1) + "-01"
-                    print(f"From 30: {next_day}")
-                    return next_day
-                else:
-                    print("Invalid date: There aren't 30 days in that month. ")
-                
-            else:
-                next_day = full_date[0] +"-"+ full_date[1] +"-"+ str(int(full_date[2]) + 1)
-                print(f"From else: {next_day}")
-                return next_day
-        else:
-            print("Enter a valid date. ")
-                
-        
-        return
-        
-    next_day = calculate_next_day(day)   
-    url = f"https://api.polygon.io/v2/aggs/ticker/{symbol}/range/5/minute/{day}/{next_day}?adjusted=true&sort=asc&apiKey={API_KEY}"
-    #url = f"https://api.polygon.io//v2/aggs/ticker/MSFT/range/5/minute/2024-05-31/2024-6-01" # Test url
-    response = requests.get(url)
+def get_next_day(day: str) -> str:
+    """
+    Calculate the next day using datetime.
     
-    if response.status_code == 200:
-        data = response.json().get('results', [])
-        return data
+    Args:
+        day (str): Date string in YYYY-MM-DD format
+        
+    Returns:
+        str: Next day in YYYY-MM-DD format
+    """
+    try:
+        current_date = datetime.strptime(day, "%Y-%m-%d")
+        next_date = current_date + timedelta(days=1)
+        return next_date.strftime("%Y-%m-%d")
+    except ValueError as e:
+        raise ValueError(f"Invalid date format. Please use YYYY-MM-DD format: {e}")
+
+def get_intra_day(symbol: str, day: str) -> List[Dict]:
+    """
+    Get 5-minute intraday data for a given symbol and day.
     
-#if __name__ == __main__():
-#day = input("Enter the date to view chart: ")
-#get_intra_day(day) 
+    Args:
+        symbol (str): Stock ticker symbol
+        day (str): Date in YYYY-MM-DD format
+        
+    Returns:
+        List[Dict]: List of intraday data points
+        
+    Raises:
+        PolygonAPIError: If API request fails
+        ValueError: If input parameters are invalid
+    """
+    # Input validation
+    if not symbol or not isinstance(symbol, str):
+        raise ValueError("Symbol must be a non-empty string")
+    
+    try:
+        next_day = get_next_day(day)
+    except ValueError as e:
+        raise ValueError(f"Invalid date: {e}")
+
+    # Construct API URL
+    url = (
+        f"https://api.polygon.io/v2/aggs/ticker/{symbol}/range/5/minute/"
+        f"{day}/{next_day}?adjusted=true&sort=asc&apiKey={API_KEY}"
+    )
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise exception for bad status codes
+        
+        data = response.json()
+        if 'error' in data:
+            raise PolygonAPIError(f"API Error: {data['error']}")
+            
+        return data.get('results', [])
+        
+    except requests.RequestException as e:
+        raise PolygonAPIError(f"Failed to fetch data from Polygon API: {e}")
+
+if __name__ == "__main__":
+    # Example usage
+    try:
+        symbol = input("Enter stock symbol: ").upper()
+        day = input("Enter date (YYYY-MM-DD): ")
+        data = get_intra_day(symbol, day)
+        print(f"Retrieved {len(data)} data points for {symbol} on {day}")
+    except (ValueError, PolygonAPIError) as e:
+        print(f"Error: {e}")

@@ -22,7 +22,7 @@ CORS(app)  # Enable CORS for the entire Flask app
 db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'db/stocks.db'))
 five_db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'db/stocks_five.db'))
 
-
+#init_db_day()
 
 def get_db_connection():
     conn = sqlite3.connect(db_path)
@@ -57,15 +57,19 @@ def init_db():
     """)
     db.commit()
 
+        
+
+
 def fetch_all_data():
     symbols = [
         'SPY',
         'AAPL', 'NVDA', 'TSLA', 'MSFT', 'GOOGL', 'AMZN',  # Technology
-        'JPM', 'BAC', 'WFC', 'GS',  # Banking
+        'JPM', 'BAC', 'WFC', 'GS', 'AXP',  # Banking
         'JNJ', 'UNH', 'PFE',  # Healthcare
         'XOM', 'CVX', 'COP',  # Energy
         'WMT', 'PG', 'KO',  # Consumer
-        'META', 'NFLX', 'ADBE'  # Internet/Software
+        'META', 'NFLX', 'ADBE',  # Internet/Software
+        'AAL', 'PLTR', 'FTNT', 'PANW', 'ZS' #Security & Interests
     ]
 
     print("Starting data fetch and pattern detection...")
@@ -81,14 +85,14 @@ def fetch_all_data():
             print(f"Error processing daily data for {symbol}: {str(e)}")
 
     # Fetch 5-minute data
-    for symbol in symbols:
-        try:
-            print(f"Fetching 5-minute data for {symbol}...")
-            fetch_five_min(symbol)
-            print(f"Detecting 5-minute patterns for {symbol}...")
-            detect_patterns_five(symbol)
-        except Exception as e:
-            print(f"Error processing 5-minute data for {symbol}: {str(e)}")
+    # for symbol in symbols:
+    #     try:
+    #         print(f"Fetching 5-minute data for {symbol}...")
+    #         fetch_five_min(symbol)
+    #         print(f"Detecting 5-minute patterns for {symbol}...")
+    #         detect_patterns_five(symbol)
+    #     except Exception as e:
+    #         print(f"Error processing 5-minute data for {symbol}: {str(e)}")
 
     print("Data fetch and pattern detection completed!")
 

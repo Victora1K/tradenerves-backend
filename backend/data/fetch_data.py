@@ -45,9 +45,15 @@ def fetch_and_store_stock_data(symbol):
 
 # List of top 7 highest market cap stocks
 symbols = [
-    'SPY',
-    'AAPL', 'NVDA', 'TSLA' , 'SPY' , 'MSFT', 'GOOGL', 'AMZN' # Technology
-]
+        'SPY',
+        'AAPL', 'NVDA', 'TSLA', 'MSFT', 'GOOGL', 'AMZN',  # Technology
+        'JPM', 'BAC', 'WFC', 'GS', 'AXP',  # Banking
+        'JNJ', 'UNH', 'PFE',  # Healthcare
+        'XOM', 'CVX', 'COP',  # Energy
+        'WMT', 'PG', 'KO',  # Consumer
+        'META', 'NFLX', 'ADBE',  # Internet/Software
+        'AAL', 'PLTR', 'FTNT', 'PANW', 'ZS' #Security & Interests
+    ]
 
 # Fetch stock data for the listed symbols
 for symbol in symbols:

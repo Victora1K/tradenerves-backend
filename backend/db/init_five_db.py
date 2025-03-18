@@ -4,7 +4,7 @@ import os
 import sqlite3
 
 # Ensure that the database path points to the right directory
-db_path = os.path.abspath(r'C:/Users\Victo\OneDrive\Desktop\Proj_AI\backend\db\stocks_five.db')
+db_path = os.path.abspath(r'C:\Users\Victo\OneDrive\Desktop\Codebase\Tradenerves\tradenerves-backend\backend\db\stocks_five.db')
 
 # Connect to the database using the absolute path
 conn = sqlite3.connect(db_path)

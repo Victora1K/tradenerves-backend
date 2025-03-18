@@ -177,11 +177,16 @@ def detect_and_store_patterns(symbol):
     conn.commit()
     conn.close()
 
-# Example usage for multiple symbols
 symbols = [
-    'SPY',
-   'AAPL', 'NVDA', 'TSLA' , 'SPY' , 'MSFT', 'GOOGL', 'AMZN' # Technology
-]
+        'SPY',
+        'AAPL', 'NVDA', 'TSLA', 'MSFT', 'GOOGL', 'AMZN',  # Technology
+        'JPM', 'BAC', 'WFC', 'GS', 'AXP',  # Banking
+        'JNJ', 'UNH', 'PFE',  # Healthcare
+        'XOM', 'CVX', 'COP',  # Energy
+        'WMT', 'PG', 'KO',  # Consumer
+        'META', 'NFLX', 'ADBE',  # Internet/Software
+        'AAL', 'PLTR', 'FTNT', 'PANW', 'ZS' #Security & Interests
+    ]
 
 for symbol in symbols:
     detect_and_store_patterns(symbol)

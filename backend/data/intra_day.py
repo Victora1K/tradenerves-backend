@@ -6,7 +6,7 @@ import requests
 
 # Load environment variables
 #load_dotenv()
-API_KEY = os.getenv('POLYGON_API_KEY', '4ku7YB5AIpIL_IRvfIiI4xZV09EoLGD6')
+API_KEY = os.getenv('POLYGON_API_KEY', 'key')
 
 class PolygonAPIError(Exception):
     """Custom exception for Polygon API errors"""

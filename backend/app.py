@@ -13,7 +13,7 @@ import random
 import threading
 
 # API Key for Polygon.io
-API_KEY = 'gNUdx8Rrob9OtDQSGK9EBX7K179qpNjQ'  # Test API Key
+API_KEY = ''  # Test API Key
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for the entire Flask app

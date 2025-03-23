@@ -3,8 +3,8 @@ import requests
 import sqlite3
 from datetime import datetime, timezone
 
-#API_KEY = '4ku7YB5AIpIL_IRvfIiI4xZV09EoLGD6'        #Prod API Key
-API_KEY = 'gNUdx8Rrob9OtDQSGK9EBX7K179qpNjQ'         #Test API Key
+#API_KEY = ''        #Prod API Key
+API_KEY = ''         #Test API Key
 
 # Set the database path using absolute path resolution
 db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/stocks_five.db'))
